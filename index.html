@@ -10,6 +10,15 @@
     <link rel="stylesheet" href="./assets/css/aos.css">
     <link rel="stylesheet" href="./assets/css/line-awesome.min.css">
     <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+</script>
+<script type="text/javascript">
+   (function(){
+      emailjs.init("drrqXRcL7GKdBVnYq");
+   })();
+</script>
 </head>
 
 <body data-bs-spy="scroll" data-bs-target=".navbar">
@@ -20,7 +29,7 @@
             <a class="navbar-brand mx-lg-auto mb-lg-4" href="#">
                 
                 <span class="h3 fw-bold d-block d-lg-none">Gregor Božnar</span>
-                <img src="./assets/images/person.jpg" class="d-none d-lg-block rounded-circle" alt="">
+                <img src="./assets/images/profile-pic.jpg" class="d-none d-lg-block rounded-circle" alt="">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -237,27 +246,24 @@
                     </div>
 
                     <div class="col-lg-8" data-aos="fade-up" data-aos-delay="300">
-                        <form action="https://formsubmit.co/gregor.boznar@gmail.com"  method="POST"class="row g-lg-3 gy-3 form">
+                        <div class="row g-lg-3 gy-3 form">
                             <div class="form-group col-md-6">
-                                <input type="text" name="name" class="form-control" placeholder="Enter your name">
-                                <input type="hidden" name="_captcha" value="false">
-                                <input type="hidden" name="_subject" value="New submission!">
-                                <input type="hidden" name="_next" value="https://gregorboznar.github.io/Portfolio/">
+                                <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
                             </div>
                             <div class="form-group col-md-6">
-                                <input type="email" name="email" class="form-control" required placeholder="Enter your email">
+                                <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
                             </div>
+                            
                             <div class="form-group col-12">
-                                <input type="text" name="subject"  class="form-control" placeholder="Enter subject">
-                            </div>
-                            <div class="form-group col-12">
-                                <input type="message"rows="4" class="form-control" name="message" required placeholder="Message">
+                                <textarea class="form-control" id="message" name="Message" required placeholder="Add your message here!"></textarea>
                                 
                             </div>
                             <div class="form-group col-12 d-grid">
-                                <button type="submit" class="btn btn-brand" onclick="openPopup()">Send</button>
+                                <button class="btn btn-primary btn-brand " onclick="sendMail()">send</button>
                             </div>
-                        </form>
+                        </div>
+
+                        
                     </div>
                 </div>
 
@@ -266,11 +272,107 @@
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-    $(document).ready(function(){
-        $('.form').on('submit', function(){
-            alert('Your details were successfully received.');
-        });
-    });
+    
+
+    function sendMail(){
+var params = {
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    message: document.getElementById("message").value
+    
+}
+const serviceID = "service_085cq1x"
+const templateID = "template_nsqrk0x"
+let strLength = params.name
+let emailValue = params.email
+
+if(params.name ===""){
+    swal({
+            
+            text: "Please add your name!",
+            icon: "error",
+            buttons: {
+    cancel: true,
+    confirm: "Confirm",
+    roll: {
+      text: "Do a barrell roll!",
+      value: "roll",
+    },
+  },
+          });
+    
+    return
+}
+
+
+else if (strLength.length  <= 1) {
+      
+      swal({
+            
+            text: "Name isn't valid!",
+            icon: "error",
+            button: false
+          });
+      
+      return;
+    }
+
+ else   if (params.email === "") {
+      
+      swal({
+            
+            text: "Please add your email!",
+            icon: "error",
+            button: false
+          });
+      
+      return;
+    }
+
+    else if (emailValue.indexOf('@') >= 0) {
+    
+    console.log("yes")
+    
+ } else { 
+    swal({
+            
+            text: "Please include an @ in your email adress!",
+            icon: "error",
+            button: false
+          });
+     
+     console.log("no")
+     return
+ }
+
+ if(params.message ===""){
+    swal({
+            
+            text: "Please add your message!",
+            icon: "error",
+            button: false
+          });
+    
+    return
+}
+
+    
+
+{emailjs.send(serviceID,templateID, params).then( res =>{
+    document.getElementById("name").value = ""
+    document.getElementById("email").value = ""
+    document.getElementById("message").value = ""
+    console.log(res)
+    swal({
+            title: "Thank You!",
+            text: "I will get back to you asap!",
+            icon: "success",
+            button: false
+          });
+})}
+
+
+    }
 </script>
 
         </section>
